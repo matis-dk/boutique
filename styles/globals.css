@@ -14,3 +14,24 @@ a {
 * {
   box-sizing: border-box;
 }
+
+ul {
+  list-style: none;
+  padding: 0px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0px;
+}
+
+@font-face {
+  font-family: "Manrope";
+  src: local("Manrope"),
+    url(./fonts/Manrope-VariableFont.ttf) format("truetype");
+  font-weight: 100 1000;
+}
