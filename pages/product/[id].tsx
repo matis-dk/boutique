@@ -4,6 +4,7 @@ import { GetStaticProps, GetStaticPaths } from "next";
 
 import { Box, Flex, Grid, Text, Image } from "@theme-ui/components";
 import { WIDTH_CONTAINER_PX } from "../../src/theme/theme";
+import { AllProducts, Product, ProductId } from "../../types/types";
 
 type DetailProps = {
   product: Product;
@@ -55,7 +56,7 @@ export default function Detail(props: DetailProps) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const products = await fetchAPI<DataWrapper<AllProducts>>(`{
+  const products = await fetchAPI<AllProducts>(`{
     allProducts {
         id
     }
@@ -74,7 +75,7 @@ export const getStaticProps: GetStaticProps<{}, ProductId> = async (
   context
 ) => {
   const productId = context.params.id;
-  const product = await fetchAPI<DataWrapper<Product>>(`{
+  const product = await fetchAPI<Product>(`{
     product(filter: {id: {eq: "${productId}"}}) {
       id
       price
@@ -102,42 +103,6 @@ export const getStaticProps: GetStaticProps<{}, ProductId> = async (
   return {
     props: product,
   };
-};
-
-export type AllProducts = {
-  allProducts: ProductId[];
-};
-
-type ProductId = {
-  id: string;
-};
-
-type ProductCategories = "øl" | "slik" | "package" | "chokolade";
-
-export type Product = {
-  id: string;
-  price: number;
-  title: string;
-  categories: ProductCategories;
-  createdAt: string;
-  description: string;
-  isLegalDrinkingAgeRequired: boolean;
-  productImage: [
-    {
-      alt: string | null;
-      id: string;
-      responsiveImage: {
-        src: string;
-        srcSet: string;
-        webpSrcSet: string;
-        base64: string;
-      };
-    }
-  ];
-};
-
-type DataWrapper<T> = {
-  data: T;
 };
 
 // { id: '26340397' },
