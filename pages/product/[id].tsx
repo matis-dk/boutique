@@ -1,10 +1,19 @@
 import Head from "next/head";
 import { fetchAPI } from "../../src/lib/api";
-import { GetStaticProps, GetStaticPaths, GetServerSideProps } from "next";
-import { Box } from "@theme-ui/components";
+import { GetStaticProps, GetStaticPaths } from "next";
 
-export default function Detail(props: any) {
+import { Box, Flex, Grid, Text, Image } from "@theme-ui/components";
+import { WIDTH_CONTAINER_PX } from "../../src/theme/theme";
+
+type DetailProps = {
+  product: Product;
+};
+export default function Detail(props: DetailProps) {
   console.log("Detail ", props);
+  const { categories, title, price, description, productImage } = props.product;
+  const imgSrc = productImage[0].responsiveImage.webpSrcSet;
+  console.log();
+
   return (
     <div>
       <Head>
@@ -12,9 +21,35 @@ export default function Detail(props: any) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Box>
-        <h1>a</h1>
-      </Box>
+      <Flex sx={{ justifyContent: "center" }}>
+        <Grid
+          gap="7"
+          py="6"
+          sx={{
+            gridTemplateColumns: "1fr 0.75fr",
+            width: WIDTH_CONTAINER_PX,
+            border: "1px solid red",
+          }}
+        >
+          <Image srcSet={imgSrc} alt="Picture of the author" width={700} />
+          <Box sx={{ maxWidth: "600px" }}>
+            <Box>
+              <Text variant="label" sx={{ textTransform: "uppercase" }}>
+                {categories}
+              </Text>
+            </Box>
+            <Box>
+              <Text variant="headline1">{title}</Text>
+            </Box>
+            <Box>
+              <Text variant="headline3">{price}kr</Text>
+            </Box>
+            <Box mt="4">
+              <Text variant="body">{description}</Text>
+            </Box>
+          </Box>
+        </Grid>
+      </Flex>
     </div>
   );
 }
@@ -48,6 +83,16 @@ export const getStaticProps: GetStaticProps<{}, ProductId> = async (
       createdAt
       description
       isLegalDrinkingAgeRequired
+      productImage {
+        alt
+        id
+        responsiveImage {
+          src
+          srcSet
+          webpSrcSet
+          base64
+        }
+      }
     }
   }`).then((products) => products.data.data);
 
@@ -77,6 +122,18 @@ export type Product = {
   createdAt: string;
   description: string;
   isLegalDrinkingAgeRequired: boolean;
+  productImage: [
+    {
+      alt: string | null;
+      id: string;
+      responsiveImage: {
+        src: string;
+        srcSet: string;
+        webpSrcSet: string;
+        base64: string;
+      };
+    }
+  ];
 };
 
 type DataWrapper<T> = {
