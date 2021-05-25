@@ -101,7 +101,6 @@ export const getStaticProps: GetStaticProps<{}, ProductId> = async (
           src
           srcSet
           webpSrcSet
-          base64
         }
       }
     }

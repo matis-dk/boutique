@@ -26,7 +26,7 @@ export type ImageType = {
     src: string;
     srcSet: string;
     webpSrcSet: string;
-    base64: string;
+    bgColor: string;
   };
 };
 

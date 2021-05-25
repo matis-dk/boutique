@@ -29,48 +29,45 @@ export default function Products(props: ProductsProps) {
             gridTemplateColumns: "repeat(4, 1fr)",
           }}
         >
-          {props.allProducts.map((p) => (
-            <Link href={`/product/${p.id}`}>
-              <Box
-                sx={{
-                  cursor: "pointer",
-                }}
-              >
-                {/* <Image
-                  data={
-                    p.productImage[0].responsiveImage as ResponsiveImageType
-                  }
-                /> */}
-                <ImageThemeUi
-                  srcSet={p.productImage[0].responsiveImage.webpSrcSet}
+          {props.allProducts.map((p) => {
+            return (
+              <Link prefetch={false} href={`/product/${p.id}`} key={p.id}>
+                <Box
                   sx={{
-                    aspectRatio: "1 / 1",
-                    width: "100%",
-                    backgroundSize: "cover",
-                    backgroundImage: `url(${p.productImage[0].responsiveImage.base64})`,
-                    boxShadow: "0 100px 80px rgba(0, 0, 0, 0.07)",
+                    cursor: "pointer",
                   }}
-                />
-                <Box>
-                  <Text
-                    mt="2"
-                    mb="1"
-                    variant="label"
-                    as="p"
-                    sx={{ textTransform: "uppercase" }}
-                  >
-                    {p.categories}
-                  </Text>
-                  <Text variant="headline4" as="p">
-                    {p.title}
-                  </Text>
-                  <Text variant="body" as="p">
-                    {p.price} kr
-                  </Text>
+                >
+                  <ImageThemeUi
+                    srcSet={p.productImage[0].responsiveImage.webpSrcSet}
+                    sx={{
+                      aspectRatio: "1 / 1",
+                      width: "100%",
+                      backgroundSize: "cover",
+                      backgroundColor: `${p.productImage[0].responsiveImage.bgColor}33`,
+                      boxShadow: "0 100px 80px rgba(0, 0, 0, 0.05)",
+                    }}
+                  />
+                  <Box>
+                    <Text
+                      mt="2"
+                      mb="1"
+                      variant="label"
+                      as="p"
+                      sx={{ textTransform: "uppercase" }}
+                    >
+                      {p.categories}
+                    </Text>
+                    <Text variant="headline4" as="p">
+                      {p.title}
+                    </Text>
+                    <Text variant="body" as="p">
+                      {p.price} kr
+                    </Text>
+                  </Box>
                 </Box>
-              </Box>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </Grid>
       </Container>
     </div>
@@ -93,9 +90,9 @@ export const getStaticProps: GetStaticProps = async (_) => {
           src
           srcSet
           webpSrcSet
-          base64
           width
           height
+          bgColor
         }
       }
     }
