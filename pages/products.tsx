@@ -40,6 +40,7 @@ export default function Products(props: ProductsProps) {
                   }}
                 >
                   <ImageThemeUi
+                    width={"700px"}
                     srcSet={p.productImage[0].responsiveImage.webpSrcSet}
                     sx={{
                       aspectRatio: "1 / 1",
