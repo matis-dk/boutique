@@ -7,13 +7,24 @@ import { WIDTH_CONTAINER_PX } from "../../src/theme/theme";
 import { AllProducts, Product, ProductId } from "../../types/types";
 
 type DetailProps = {
-  product: Product;
+  product?: Product;
 };
 export default function Detail(props: DetailProps) {
-  console.log("Detail ", props);
+  if (!props.product) {
+    return (
+      <div>
+        <Head>
+          <title>Product - Boutique</title>
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+
+        <Flex sx={{ justifyContent: "center" }}>As FALLBACK Ya!</Flex>
+      </div>
+    );
+  }
+
   const { categories, title, price, description, productImage } = props.product;
   const imgSrc = productImage[0].responsiveImage.webpSrcSet;
-  console.log();
 
   return (
     <div>
@@ -62,11 +73,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
     }
   }`).then((products) => products.data.data.allProducts);
 
-  // console.log("getStaticPaths -----------");
-  // console.log(products);
+  const productIds = products.map((p) => ({ params: p }));
 
   return {
-    paths: products.map((p) => ({ params: p })),
+    paths: productIds,
     fallback: true,
   };
 };
@@ -95,10 +105,11 @@ export const getStaticProps: GetStaticProps<{}, ProductId> = async (
         }
       }
     }
-  }`).then((products) => products.data.data);
-
-  // console.log("getStaticProps -----------");
-  // console.log(product);
+  }`)
+    .then((product) => product.data.data)
+    .catch((p) => {
+      throw new Error("We need to fix this");
+    });
 
   return {
     props: product,
