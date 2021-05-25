@@ -3,11 +3,7 @@ import { fetchAPI } from "../../src/lib/api";
 import { GetStaticProps, GetStaticPaths } from "next";
 
 import { Box, Flex, Grid, Text, Image } from "@theme-ui/components";
-import {
-  PADDING_CONTAINER,
-  WIDTH_CONTAINER,
-  WIDTH_CONTAINER_PX,
-} from "../../src/theme/theme";
+import { PADDING_CONTAINER, WIDTH_CONTAINER_PX } from "../../src/theme/theme";
 import { AllProducts, Product, ProductId } from "../../types/types";
 
 type DetailProps = {
@@ -57,6 +53,8 @@ export default function Detail(props: DetailProps) {
             <Image
               srcSet={imgSrc}
               alt="Picture of the author"
+              width={"700px"}
+              height={"700px"}
               sx={{
                 backgroundColor: `${imgBg}33`,
                 maxWidth: imgSize,
