@@ -1,7 +1,7 @@
 import type { AppProps /*, AppContext */ } from "next/app";
 import "../styles/globals.css";
 import { Box, ThemeProvider } from "theme-ui";
-import theme, { colors } from "../src/theme/theme";
+import theme, { colors, WIDTH_CONTAINER_PX } from "../src/theme/theme";
 import Header from "../src/layout/Header";
 import Footer from "../src/layout/Footer";
 

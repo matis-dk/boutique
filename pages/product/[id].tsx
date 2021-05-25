@@ -3,7 +3,11 @@ import { fetchAPI } from "../../src/lib/api";
 import { GetStaticProps, GetStaticPaths } from "next";
 
 import { Box, Flex, Grid, Text, Image } from "@theme-ui/components";
-import { WIDTH_CONTAINER_PX } from "../../src/theme/theme";
+import {
+  PADDING_CONTAINER,
+  WIDTH_CONTAINER,
+  WIDTH_CONTAINER_PX,
+} from "../../src/theme/theme";
 import { AllProducts, Product, ProductId } from "../../types/types";
 
 type DetailProps = {
@@ -25,6 +29,8 @@ export default function Detail(props: DetailProps) {
 
   const { categories, title, price, description, productImage } = props.product;
   const imgSrc = productImage[0].responsiveImage.webpSrcSet;
+  const imgBg = productImage[0].responsiveImage.bgColor;
+  const imgSize = "700px";
 
   return (
     <div>
@@ -33,34 +39,48 @@ export default function Detail(props: DetailProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Flex sx={{ justifyContent: "center" }}>
-        <Grid
-          gap="7"
-          py="6"
-          sx={{
-            gridTemplateColumns: "1fr 0.75fr",
-            width: WIDTH_CONTAINER_PX,
-            border: "1px solid red",
-          }}
-        >
-          <Image srcSet={imgSrc} alt="Picture of the author" width={700} />
-          <Box sx={{ maxWidth: "600px" }}>
-            <Box>
-              <Text variant="label" sx={{ textTransform: "uppercase" }}>
-                {categories}
-              </Text>
+      <Flex
+        px={PADDING_CONTAINER}
+        sx={{
+          justifyContent: "center",
+        }}
+      >
+        <Flex sx={{ width: WIDTH_CONTAINER_PX }}>
+          <Grid
+            gap="7"
+            py="6"
+            sx={{
+              gridTemplateColumns: "1fr 0.75fr",
+              // border: "1px solid red",
+            }}
+          >
+            <Image
+              srcSet={imgSrc}
+              alt="Picture of the author"
+              sx={{
+                backgroundColor: `${imgBg}33`,
+                maxWidth: imgSize,
+                width: "100%",
+              }}
+            />
+            <Box sx={{ maxWidth: "600px" }}>
+              <Box>
+                <Text variant="label" sx={{ textTransform: "uppercase" }}>
+                  {categories}
+                </Text>
+              </Box>
+              <Box>
+                <Text variant="headline1">{title}</Text>
+              </Box>
+              <Box>
+                <Text variant="headline3">{price}kr</Text>
+              </Box>
+              <Box mt="4">
+                <Text variant="body">{description}</Text>
+              </Box>
             </Box>
-            <Box>
-              <Text variant="headline1">{title}</Text>
-            </Box>
-            <Box>
-              <Text variant="headline3">{price}kr</Text>
-            </Box>
-            <Box mt="4">
-              <Text variant="body">{description}</Text>
-            </Box>
-          </Box>
-        </Grid>
+          </Grid>
+        </Flex>
       </Flex>
     </div>
   );

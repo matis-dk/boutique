@@ -30,6 +30,8 @@ export default function Products(props: ProductsProps) {
           }}
         >
           {props.allProducts.map((p) => {
+            console.log(p.productImage[0].responsiveImage.webpSrcSet);
+
             return (
               <Link prefetch={false} href={`/product/${p.id}`} key={p.id}>
                 <Box
