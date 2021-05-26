@@ -59,6 +59,13 @@ const text = {
     fontWeight: "800",
     lineHeight: "24px",
   },
+  headline5: {
+    fontFamily: "Manrope",
+    fontSize: "14px",
+    fontStyle: "normal",
+    fontWeight: "800",
+    lineHeight: "16px",
+  },
   body: {
     fontFamily: "Manrope",
     fontSize: "16px",
@@ -245,12 +252,16 @@ const theme = {
     },
   },
   links: {
-    red: {
-      ...text.manchet,
+    default: {
       cursor: "pointer",
-      textDecoration: "underline",
-      color: colors.red1,
+      textDecoration: "none",
     },
+    // red: {
+    //   ...text.manchet,
+    //   cursor: "pointer",
+    //   textDecoration: "underline",
+    //   color: colors.red1,
+    // },
   },
   styles: {
     a: {
@@ -260,6 +271,10 @@ const theme = {
       "&:hover": {
         color: colors.red2,
       },
+    },
+    none: {
+      cursor: "pointer",
+      textDecoration: "none",
     },
   },
 };

@@ -2,15 +2,16 @@ import Head from "next/head";
 import { fetchAPI } from "../../src/lib/api";
 import { GetStaticProps, GetStaticPaths } from "next";
 
-import { Box, Flex, Grid, Text, Image } from "@theme-ui/components";
+import { Box, Flex, Grid, Text, Image, Link } from "@theme-ui/components";
 import { PADDING_CONTAINER, WIDTH_CONTAINER_PX } from "../../src/theme/theme";
 import { AllProducts, Product, ProductId } from "../../types/types";
 
 type DetailProps = {
   product?: Product;
+  relatedProducts?: Product[];
 };
-export default function Detail(props: DetailProps) {
-  if (!props.product) {
+export default function Detail({ product, relatedProducts }: DetailProps) {
+  if (!product) {
     return (
       <div>
         <Head>
@@ -23,7 +24,7 @@ export default function Detail(props: DetailProps) {
     );
   }
 
-  const { categories, title, price, description, productImage } = props.product;
+  const { categories, title, price, description, productImage } = product;
   const imgSrc = productImage[0].responsiveImage.webpSrcSet;
   const imgBg = productImage[0].responsiveImage.bgColor;
   const imgSize = "700px";
@@ -34,20 +35,23 @@ export default function Detail(props: DetailProps) {
         <title>Product - Boutique</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <Flex
         px={PADDING_CONTAINER}
         sx={{
           justifyContent: "center",
         }}
       >
-        <Flex sx={{ width: WIDTH_CONTAINER_PX }}>
+        <Grid
+          sx={{
+            maxWidth: WIDTH_CONTAINER_PX,
+            width: "100%",
+          }}
+        >
           <Grid
             gap="7"
             py="6"
             sx={{
               gridTemplateColumns: "1fr 0.75fr",
-              // border: "1px solid red",
             }}
           >
             <Image
@@ -78,7 +82,50 @@ export default function Detail(props: DetailProps) {
               </Box>
             </Box>
           </Grid>
-        </Flex>
+          <Box>
+            <Text variant="headline2">
+              Lignende {product.categories} produkter
+            </Text>
+            <Grid
+              mt="4"
+              gap="6"
+              sx={{
+                gridTemplateColumns: `repeat(auto-fill, 186px)`,
+              }}
+            >
+              {relatedProducts.map((related) => (
+                <Link
+                  href={`/product/${related.id}`}
+                  key={related.id}
+                  variant="none"
+                >
+                  <Flex
+                    sx={{
+                      width: "200px",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Box>
+                      <Image
+                        srcSet={related.productImage[0].responsiveImage.srcSet}
+                        sx={{
+                          width: "100%",
+                        }}
+                      />
+                      <Text mt="2" variant="headline5">
+                        {related.title}
+                      </Text>
+                    </Box>
+                    <Text mt="1" variant="label">
+                      {related.price} kr.
+                    </Text>
+                  </Flex>
+                </Link>
+              ))}
+            </Grid>
+          </Box>
+        </Grid>
       </Flex>
     </div>
   );
@@ -104,6 +151,25 @@ export const getStaticProps: GetStaticProps<{}, ProductId> = async (
 ) => {
   const productId = context.params.id;
   const product = await fetchAPI<Product>(`{
+    relatedProducts: allProducts(filter: {categories: {eq: "slik"}}) {
+      id
+      price
+      title
+      categories
+      createdAt
+      description
+      isLegalDrinkingAgeRequired
+      productImage {
+        alt
+        id
+        responsiveImage {
+          src
+          srcSet
+          sizes
+          webpSrcSet
+        }
+      }
+    }
     product(filter: {id: {eq: "${productId}"}}) {
       id
       price
