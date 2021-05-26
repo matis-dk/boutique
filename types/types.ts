@@ -25,6 +25,7 @@ export type ImageType = {
   responsiveImage: {
     src: string;
     srcSet: string;
+    sizes: string;
     webpSrcSet: string;
     bgColor: string;
   };

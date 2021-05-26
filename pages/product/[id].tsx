@@ -118,6 +118,7 @@ export const getStaticProps: GetStaticProps<{}, ProductId> = async (
         responsiveImage {
           src
           srcSet
+          sizes
           webpSrcSet
         }
       }

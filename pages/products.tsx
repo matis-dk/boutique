@@ -26,12 +26,16 @@ export default function Products(props: ProductsProps) {
         <Grid
           gap="6"
           sx={{
-            gridTemplateColumns: "repeat(4, 1fr)",
+            gridTemplateColumns: [
+              "repeat(1, 1fr)",
+              "repeat(2, 1fr)",
+              "repeat(3, 1fr)",
+              "repeat(4, 1fr)",
+            ],
           }}
         >
           {props.allProducts.map((p) => {
-            console.log(p.productImage[0].responsiveImage.webpSrcSet);
-
+            const img = p.productImage[0].responsiveImage;
             return (
               <Link prefetch={false} href={`/product/${p.id}`} key={p.id}>
                 <Box
@@ -42,12 +46,13 @@ export default function Products(props: ProductsProps) {
                   <ImageThemeUi
                     width={"324px"}
                     height={"324px"}
-                    srcSet={p.productImage[0].responsiveImage.webpSrcSet}
+                    srcSet={img.webpSrcSet}
+                    sizes={img.sizes}
                     sx={{
                       aspectRatio: "1 / 1",
                       width: "100%",
                       backgroundSize: "cover",
-                      backgroundColor: `${p.productImage[0].responsiveImage.bgColor}33`,
+                      backgroundColor: `${img.bgColor}33`,
                       boxShadow: "0 100px 80px rgba(0, 0, 0, 0.05)",
                     }}
                   />
@@ -93,6 +98,7 @@ export const getStaticProps: GetStaticProps = async (_) => {
         responsiveImage {
           src
           srcSet
+          sizes
           webpSrcSet
           width
           height

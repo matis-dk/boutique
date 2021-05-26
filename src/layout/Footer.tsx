@@ -7,9 +7,9 @@ import { PADDING_CONTAINER, WIDTH_CONTAINER_PX } from "../theme/theme";
 export default function Header() {
   return (
     <Flex
-      px={PADDING_CONTAINER}
+      p={PADDING_CONTAINER}
       sx={{
-        height: "400px",
+        minHeight: "400px",
         justifyContent: "center",
       }}
     >
@@ -25,9 +25,10 @@ export default function Header() {
           mt="5"
           sx={{
             justifyContent: "space-between",
+            flexDirection: ["column", "column", "row"],
           }}
         >
-          <Box>
+          <Box pt="4">
             <Text as="h4" variant="headline4">
               Hvad er Boutique?
             </Text>
@@ -35,7 +36,7 @@ export default function Header() {
               Vi prøver ting af
             </Text>
           </Box>
-          <Box>
+          <Box pt="4">
             <Text as="h4" variant="headline4">
               Om os?
             </Text>
@@ -46,7 +47,7 @@ export default function Header() {
               Ejerne
             </Text>
           </Box>
-          <Box>
+          <Box pt="4">
             <Text as="h4" variant="headline4">
               Service
             </Text>
@@ -57,7 +58,7 @@ export default function Header() {
               Kundeprodukter
             </Text>
           </Box>
-          <Box>
+          <Box pt="4">
             <Text as="h4" variant="headline4">
               Diverse
             </Text>
