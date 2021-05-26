@@ -1,13 +1,25 @@
-import { Box, Grid, Text, Image as ImageThemeUi } from "@theme-ui/components";
-import { GetStaticProps } from "next";
-import Head from "next/head";
-import Link from "next/link";
-import Container from "../src/layout/Container";
-import { fetchAPI } from "../src/lib/api";
-import { WIDTH_CONTAINER } from "../src/theme/theme";
-import { ProductList } from "../types/types";
-import { Image, ResponsiveImageType } from "react-datocms";
+import { Image as ImageThemeUi, ImageProps } from "@theme-ui/components";
+import { ImageType, Product } from "../../types/types";
 
-export default function ImageFade(props: any) {
-  return <Box></Box>;
+type ImageFadeProps = {
+  img: ImageType;
+} & ImageProps;
+
+export default function ImageFade(props: ImageFadeProps) {
+  const img = props.img.responsiveImage;
+  return (
+    <ImageThemeUi
+      width={"324px"}
+      height={"324px"}
+      srcSet={img.srcSet}
+      sizes={img.sizes}
+      sx={{
+        aspectRatio: "1 / 1",
+        width: "100%",
+        backgroundSize: "cover",
+        backgroundColor: `${img.bgColor}33`,
+        boxShadow: "0 100px 80px rgba(0, 0, 0, 0.05)",
+      }}
+    />
+  );
 }

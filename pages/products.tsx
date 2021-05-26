@@ -6,7 +6,7 @@ import Container from "../src/layout/Container";
 import { fetchAPI } from "../src/lib/api";
 import { WIDTH_CONTAINER } from "../src/theme/theme";
 import { ProductList } from "../types/types";
-import { Image, ResponsiveImageType } from "react-datocms";
+import ImageFade from "../src/ui/ImageFade";
 
 type ProductsProps = {
   allProducts: ProductList[];
@@ -43,18 +43,9 @@ export default function Products(props: ProductsProps) {
                     cursor: "pointer",
                   }}
                 >
-                  <ImageThemeUi
-                    width={"324px"}
-                    height={"324px"}
-                    srcSet={img.webpSrcSet}
-                    sizes={img.sizes}
-                    sx={{
-                      aspectRatio: "1 / 1",
-                      width: "100%",
-                      backgroundSize: "cover",
-                      backgroundColor: `${img.bgColor}33`,
-                      boxShadow: "0 100px 80px rgba(0, 0, 0, 0.05)",
-                    }}
+                  <ImageFade
+                    img={p.productImage[0]}
+                    src="https://www.google.dk"
                   />
                   <Box>
                     <Text
