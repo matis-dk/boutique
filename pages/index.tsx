@@ -25,9 +25,12 @@ export default function Index() {
             flexDirection: "column",
           }}
         >
+          <Image src="/logo-circle.png" width="100px" mb="8" />
           <Text variant="headline1">Unicorns in fantasyland</Text>
-          <Text variant="manchet">Unicorns and</Text>
-          <Box mt="4">
+          <Text variant="manchet" mt="2">
+            Check vores fantastiske udvalg af ligegyldige produkter
+          </Text>
+          <Box mt="5">
             <Link prefetch={false} href={`/products`}>
               <Button>Se produkter</Button>
             </Link>
