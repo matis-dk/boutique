@@ -8,26 +8,21 @@ type ImageFadeProps = {
   sx?: ThemeUIStyleObject;
   width?: string;
   height?: string;
+  sizes?: string;
 };
 
-const arr = [];
-
 export default function ImageFade(props: ImageFadeProps) {
+  const [show, setShow] = useState(false);
   const img = props.img.responsiveImage;
-  const isImgLoaded = arr.includes(img.srcSet);
-
-  const [show, setShow] = useState(isImgLoaded);
 
   useEffect(() => {
-    if (!isImgLoaded) {
-      var imgLoaded = new Image();
-      imgLoaded.srcset = img.srcSet;
-      imgLoaded.onload = function () {
-        setShow(true);
-      };
-    }
+    var imgLoaded = new Image();
+    imgLoaded.srcset = img.srcSet;
+    imgLoaded.onload = function () {
+      setShow(true);
+    };
   }, []);
-
+  console.log(img.srcSet);
   return (
     <Box
       sx={{
@@ -39,13 +34,13 @@ export default function ImageFade(props: ImageFadeProps) {
       <ImageThemeUi
         width={props.width || ""}
         height={props.height || ""}
+        sizes={props.sizes || ""}
         srcSet={img.srcSet}
-        sizes={img.sizes}
         sx={{
           aspectRatio: "1 / 1",
           width: "100%",
           backgroundSize: "cover",
-          animation: show && "fadeIn 0.3s forwards",
+          animation: show && "fadeIn 0.2s forwards",
           opacity: 0,
           ...props.sx,
         }}

@@ -111,7 +111,10 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
                     }}
                   >
                     <Box>
-                      <ImageFade img={related.productImage[0]} />
+                      <ImageFade
+                        img={related.productImage[0]}
+                        sizes="(min-width: 600px) 100px, 400px"
+                      />
                       <Text mt="2" variant="headline5">
                         {related.title}
                       </Text>
@@ -166,6 +169,7 @@ export const getStaticProps: GetStaticProps<{}, ProductId> = async (
           srcSet
           sizes
           webpSrcSet
+          bgColor
         }
       }
     }
@@ -185,6 +189,7 @@ export const getStaticProps: GetStaticProps<{}, ProductId> = async (
           srcSet
           sizes
           webpSrcSet
+          bgColor
         }
       }
     }

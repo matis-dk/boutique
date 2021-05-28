@@ -43,7 +43,10 @@ export default function Products(props: ProductsProps) {
                     cursor: "pointer",
                   }}
                 >
-                  <ImageFade img={p.productImage[0]} />
+                  <ImageFade
+                    img={p.productImage[0]}
+                    sizes="(min-width: 600px) 220px, 600px"
+                  />
                   <Box>
                     <Text
                       mt="2"
