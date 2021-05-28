@@ -1,18 +1,25 @@
-import { Box, Grid, Text, Image as ImageThemeUi } from "@theme-ui/components";
+import { Box, Grid, Text } from "@theme-ui/components";
 import { GetStaticProps } from "next";
 import Head from "next/head";
-import Link from "next/link";
+import { useRouter } from "next/router";
+
 import Container from "../src/layout/Container";
 import { fetchAPI } from "../src/lib/api";
-import { WIDTH_CONTAINER } from "../src/theme/theme";
 import { ProductList } from "../types/types";
 import ImageFade from "../src/ui/ImageFade";
+import { MouseEvent, useEffect } from "react";
 
 type ProductsProps = {
   allProducts: ProductList[];
 };
 
 export default function Products(props: ProductsProps) {
+  const router = useRouter();
+
+  useEffect(() => {
+    props.allProducts.forEach((p) => router.prefetch(`/product/${p.id}`));
+  }, []);
+
   return (
     <div>
       <Head>
@@ -35,37 +42,42 @@ export default function Products(props: ProductsProps) {
           }}
         >
           {props.allProducts.map((p) => {
-            const img = p.productImage[0].responsiveImage;
             return (
-              <Link prefetch={false} href={`/product/${p.id}`} key={p.id}>
-                <Box
+              <Box key={p.id}>
+                <ImageFade
+                  img={p.productImage[0]}
+                  sizes="(max-width: 600px) 300px, 300px"
                   sx={{
                     cursor: "pointer",
                   }}
-                >
-                  <ImageFade
-                    img={p.productImage[0]}
-                    sizes="(max-width: 600px) 300px, 300px"
-                  />
-                  <Box>
-                    <Text
-                      mt="2"
-                      mb="1"
-                      variant="label"
-                      as="p"
-                      sx={{ textTransform: "uppercase" }}
-                    >
-                      {p.categories}
-                    </Text>
-                    <Text variant="headline4" as="p">
-                      {p.title}
-                    </Text>
-                    <Text variant="body" as="p">
-                      {p.price} kr
-                    </Text>
-                  </Box>
+                  onClick={(e: MouseEvent<HTMLDivElement>) => {
+                    const bbox = JSON.stringify(
+                      e.currentTarget.getBoundingClientRect()
+                    );
+                    router.push(
+                      `/product/[id]`,
+                      `/product/${p.id}?bbox=${btoa(bbox)}`
+                    );
+                  }}
+                />
+                <Box>
+                  <Text
+                    mt="2"
+                    mb="1"
+                    variant="label"
+                    as="p"
+                    sx={{ textTransform: "uppercase" }}
+                  >
+                    {p.categories}
+                  </Text>
+                  <Text variant="headline4" as="p">
+                    {p.title}
+                  </Text>
+                  <Text variant="body" as="p">
+                    {p.price} kr
+                  </Text>
                 </Box>
-              </Link>
+              </Box>
             );
           })}
         </Grid>

@@ -5,14 +5,38 @@ import { GetStaticProps, GetStaticPaths } from "next";
 import { Box, Flex, Grid, Text, Image } from "@theme-ui/components";
 import { PADDING_CONTAINER, WIDTH_CONTAINER_PX } from "../../src/theme/theme";
 import { AllProducts, Product, ProductId } from "../../types/types";
-import ImageFade from "../../src/ui/ImageFade";
+import ImageFade, { ImageWithBg } from "../../src/ui/ImageFade";
 import Link from "next/link";
+import React, { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/router";
 
 type DetailProps = {
   product?: Product;
   relatedProducts?: Product[];
 };
+
+function getTransformation(bStart: DOMRect, bEnd: DOMRect): string {
+  const deltaX = bStart.left + bStart.width / 2 - (bEnd.left + bEnd.width / 2);
+  const deltaY = bStart.top + bStart.height / 2 - (bEnd.top + bEnd.height / 2);
+  const scale = (bStart.width + bStart.height) / (bEnd.width + bEnd.height);
+
+  const r = (n: number): number => Math.round(n);
+
+  return `translate(${r(deltaX)}px, ${r(deltaY)}px) scale(${scale.toFixed(2)})`;
+}
+
+type Transformation = {
+  transform: string;
+  transition: string;
+  opacity: number;
+};
+
 export default function Detail({ product, relatedProducts }: DetailProps) {
+  const router = useRouter();
+  const elemRef = useRef<HTMLDivElement>(null);
+  const [transformation, setTransformation] =
+    useState<null | Transformation>(null);
+
   if (!product) {
     return (
       <div>
@@ -27,9 +51,40 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
   }
 
   const { categories, title, price, description, productImage } = product;
-  const imgSrc = productImage[0].responsiveImage.webpSrcSet;
-  const imgBg = productImage[0].responsiveImage.bgColor;
-  const imgSize = "700px";
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(router.asPath.split("?")[1]);
+    const bbox = urlParams.get("bbox");
+    const endTransformation = {
+      transform: "translate(0, 0) scale(1)",
+      transition: `transform 0.3s`,
+      opacity: 1,
+    };
+
+    if (!bbox) {
+      console.log("EXIT");
+      setTransformation(endTransformation);
+      return;
+    }
+
+    const bStart = JSON.parse(atob(bbox)) as DOMRect;
+    const bEnd = elemRef.current.getBoundingClientRect();
+
+    console.clear();
+    console.log("bStart", bStart);
+    console.log("bEnd", bEnd);
+
+    const startTransformation = {
+      transform: getTransformation(bStart, bEnd),
+      transition: `transform 0s`,
+      opacity: 1,
+    };
+
+    setTransformation(startTransformation);
+    setTimeout(() => {
+      setTransformation(endTransformation);
+    });
+  }, []);
 
   return (
     <div>
@@ -56,23 +111,17 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
               gridTemplateColumns: "1fr 0.75fr",
             }}
           >
-            <ImageFade
+            <ImageWithBg
+              forwardRef={elemRef}
               img={productImage[0]}
               width={"700px"}
               height={"700px"}
               sx={{
                 width: "100%",
+                opacity: 0,
+                ...transformation,
               }}
             />
-            {/* <Image
-              srcSet={imgSrc}
-              width={"700px"}
-              height={"700px"}
-              sx={{
-                maxWidth: imgSize,
-                width: "100%",
-              }}
-            /> */}
             <Box sx={{ maxWidth: "600px" }}>
               <Box>
                 <Text variant="label" sx={{ textTransform: "uppercase" }}>
