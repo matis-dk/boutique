@@ -5,6 +5,7 @@ import { GetStaticProps, GetStaticPaths } from "next";
 import { Box, Flex, Grid, Text, Image, Link } from "@theme-ui/components";
 import { PADDING_CONTAINER, WIDTH_CONTAINER_PX } from "../../src/theme/theme";
 import { AllProducts, Product, ProductId } from "../../types/types";
+import ImageFade from "../../src/ui/ImageFade";
 
 type DetailProps = {
   product?: Product;
@@ -107,12 +108,7 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
                     }}
                   >
                     <Box>
-                      <Image
-                        srcSet={related.productImage[0].responsiveImage.srcSet}
-                        sx={{
-                          width: "100%",
-                        }}
-                      />
+                      <ImageFade img={related.productImage[0]} />
                       <Text mt="2" variant="headline5">
                         {related.title}
                       </Text>
