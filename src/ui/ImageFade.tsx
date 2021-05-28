@@ -1,9 +1,13 @@
 import { Box, Image as ImageThemeUi, ImageProps } from "@theme-ui/components";
+import { ThemeUIStyleObject } from "@theme-ui/css";
 import { useEffect, useState } from "react";
 import { ImageType, Product } from "../../types/types";
 
 type ImageFadeProps = {
   img: ImageType;
+  sx?: ThemeUIStyleObject;
+  width?: string;
+  height?: string;
 };
 
 const arr = [];
@@ -33,8 +37,8 @@ export default function ImageFade(props: ImageFadeProps) {
       }}
     >
       <ImageThemeUi
-        width={"324px"}
-        height={"324px"}
+        width={props.width || ""}
+        height={props.height || ""}
         srcSet={img.srcSet}
         sizes={img.sizes}
         sx={{
@@ -43,6 +47,7 @@ export default function ImageFade(props: ImageFadeProps) {
           backgroundSize: "cover",
           animation: show && "fadeIn 0.3s forwards",
           opacity: 0,
+          ...props.sx,
         }}
       />
     </Box>

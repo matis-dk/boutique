@@ -2,10 +2,11 @@ import Head from "next/head";
 import { fetchAPI } from "../../src/lib/api";
 import { GetStaticProps, GetStaticPaths } from "next";
 
-import { Box, Flex, Grid, Text, Image, Link } from "@theme-ui/components";
+import { Box, Flex, Grid, Text, Image } from "@theme-ui/components";
 import { PADDING_CONTAINER, WIDTH_CONTAINER_PX } from "../../src/theme/theme";
 import { AllProducts, Product, ProductId } from "../../types/types";
 import ImageFade from "../../src/ui/ImageFade";
+import Link from "next/link";
 
 type DetailProps = {
   product?: Product;
@@ -55,17 +56,23 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
               gridTemplateColumns: "1fr 0.75fr",
             }}
           >
-            <Image
-              srcSet={imgSrc}
-              alt="Picture of the author"
+            <ImageFade
+              img={productImage[0]}
               width={"700px"}
               height={"700px"}
               sx={{
-                backgroundColor: `${imgBg}33`,
-                maxWidth: imgSize,
                 width: "100%",
               }}
             />
+            {/* <Image
+              srcSet={imgSrc}
+              width={"700px"}
+              height={"700px"}
+              sx={{
+                maxWidth: imgSize,
+                width: "100%",
+              }}
+            /> */}
             <Box sx={{ maxWidth: "600px" }}>
               <Box>
                 <Text variant="label" sx={{ textTransform: "uppercase" }}>
@@ -83,7 +90,7 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
               </Box>
             </Box>
           </Grid>
-          <Box>
+          <Box pb="6">
             <Text variant="headline2">
               Lignende {product.categories} produkter
             </Text>
@@ -95,11 +102,7 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
               }}
             >
               {relatedProducts.map((related) => (
-                <Link
-                  href={`/product/${related.id}`}
-                  key={related.id}
-                  variant="none"
-                >
+                <Link href={`/product/${related.id}`} key={related.id}>
                   <Flex
                     sx={{
                       width: "200px",
