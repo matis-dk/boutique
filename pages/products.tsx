@@ -101,5 +101,6 @@ export const getStaticProps: GetStaticProps = async (_) => {
 
   return {
     props: productList,
+    revalidate: 60,
   };
 };
