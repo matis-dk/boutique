@@ -45,7 +45,7 @@ export default function Products(props: ProductsProps) {
                 >
                   <ImageFade
                     img={p.productImage[0]}
-                    sizes="(max-width: 600px) 800px, 324px"
+                    sizes="(max-width: 600px) 300px, 300px"
                   />
                   <Box>
                     <Text
