@@ -11,18 +11,29 @@ type ImageFadeProps = {
   sizes?: string;
 };
 
+const imgSrcsetLoaded = [];
+
 export default function ImageFade(props: ImageFadeProps) {
-  const [show, setShow] = useState(false);
   const img = props.img.responsiveImage;
+  const isImgLoaded = imgSrcsetLoaded.includes(img.srcSet);
+
+  const [show, setShow] = useState(Boolean(isImgLoaded));
 
   useEffect(() => {
+    if (isImgLoaded) {
+      return;
+    }
+
     var imgLoaded = new Image();
     imgLoaded.srcset = img.srcSet;
     imgLoaded.onload = function () {
       setShow(true);
+      setTimeout(() => {
+        imgSrcsetLoaded.push(img.srcSet);
+      }, 1000);
     };
   }, []);
-  console.log(img.srcSet);
+
   return (
     <Box
       sx={{
@@ -40,8 +51,8 @@ export default function ImageFade(props: ImageFadeProps) {
           aspectRatio: "1 / 1",
           width: "100%",
           backgroundSize: "cover",
-          animation: show && "fadeIn 0.2s forwards",
-          opacity: 0,
+          animation: isImgLoaded ? "" : show && "fadeIn 0.2s forwards",
+          opacity: Number(isImgLoaded),
           ...props.sx,
         }}
       />

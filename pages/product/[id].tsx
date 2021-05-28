@@ -102,12 +102,17 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
               }}
             >
               {relatedProducts.map((related) => (
-                <Link href={`/product/${related.id}`} key={related.id}>
+                <Link
+                  href={`/product/${related.id}`}
+                  key={related.id}
+                  scroll={false}
+                >
                   <Flex
                     sx={{
                       width: "200px",
                       flexDirection: "column",
                       justifyContent: "space-between",
+                      cursor: "pointer",
                     }}
                   >
                     <Box>
