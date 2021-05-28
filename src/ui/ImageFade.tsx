@@ -15,7 +15,8 @@ const imgSrcsetLoaded = [];
 
 export default function ImageFade(props: ImageFadeProps) {
   const img = props.img.responsiveImage;
-  const isImgLoaded = imgSrcsetLoaded.includes(img.srcSet);
+  const imgUrl = img.webpSrcSet;
+  const isImgLoaded = imgSrcsetLoaded.includes(imgUrl);
 
   const [show, setShow] = useState(Boolean(isImgLoaded));
 
@@ -25,11 +26,11 @@ export default function ImageFade(props: ImageFadeProps) {
     }
 
     var imgLoaded = new Image();
-    imgLoaded.srcset = img.srcSet;
+    imgLoaded.srcset = imgUrl;
     imgLoaded.onload = function () {
       setShow(true);
       setTimeout(() => {
-        imgSrcsetLoaded.push(img.srcSet);
+        imgSrcsetLoaded.push(imgUrl);
       }, 1000);
     };
   }, []);
@@ -46,8 +47,9 @@ export default function ImageFade(props: ImageFadeProps) {
         width={props.width || ""}
         height={props.height || ""}
         sizes={props.sizes || ""}
-        srcSet={img.srcSet}
+        srcSet={imgUrl}
         sx={{
+          display: "block",
           aspectRatio: "1 / 1",
           width: "100%",
           backgroundSize: "cover",
