@@ -9,6 +9,7 @@ import ImageFade, { ImageWithBg } from "../../src/ui/ImageFade";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
+import { useSpring, animated } from "react-spring";
 
 type DetailProps = {
   product?: Product;
@@ -34,6 +35,11 @@ type Transformation = {
 export default function Detail({ product, relatedProducts }: DetailProps) {
   const router = useRouter();
   const elemRef = useRef<HTMLDivElement>(null);
+  const [styles, api] = useSpring(() => ({
+    opacity: 0,
+    transform: "translate(0, 0) scale(1)",
+  }));
+
   const [transformation, setTransformation] =
     useState<null | Transformation>(null);
 
@@ -55,34 +61,21 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
   useEffect(() => {
     const urlParams = new URLSearchParams(router.asPath.split("?")[1]);
     const bbox = urlParams.get("bbox");
-    const endTransformation = {
-      transform: "translate(0, 0) scale(1)",
-      transition: `transform 0.3s`,
-      opacity: 1,
-    };
 
     if (!bbox) {
-      console.log("EXIT");
-      setTransformation(endTransformation);
+      api.set({ opacity: 1 });
       return;
     }
 
     const bStart = JSON.parse(atob(bbox)) as DOMRect;
     const bEnd = elemRef.current.getBoundingClientRect();
 
-    console.clear();
-    console.log("bStart", bStart);
-    console.log("bEnd", bEnd);
-
-    const startTransformation = {
+    api.set({ opacity: 1 });
+    api.set({
       transform: getTransformation(bStart, bEnd),
-      transition: `transform 0s`,
-      opacity: 1,
-    };
-
-    setTransformation(startTransformation);
-    setTimeout(() => {
-      setTransformation(endTransformation);
+    });
+    api.start({
+      transform: "translate(0, 0) scale(1)",
     });
   }, []);
 
@@ -111,17 +104,14 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
               gridTemplateColumns: "1fr 0.75fr",
             }}
           >
-            <ImageWithBg
-              forwardRef={elemRef}
-              img={productImage[0]}
-              width={"700px"}
-              height={"700px"}
-              sx={{
-                width: "100%",
-                opacity: 0,
-                ...transformation,
-              }}
-            />
+            <animated.div style={styles}>
+              <ImageWithBg
+                forwardRef={elemRef}
+                img={productImage[0]}
+                width={"700px"}
+                height={"700px"}
+              />
+            </animated.div>
             <Box sx={{ maxWidth: "600px" }}>
               <Box>
                 <Text variant="label" sx={{ textTransform: "uppercase" }}>
