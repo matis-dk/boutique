@@ -79,13 +79,7 @@ export function ImageWithBg(props: ImageWithBgProps) {
   const img = props.img.responsiveImage;
   const imgUrl = img.webpSrcSet;
   return (
-    <Box
-      ref={props.forwardRef}
-      sx={{
-        backgroundColor: `${img.bgColor}33`,
-        boxShadow: "0 100px 80px rgba(0, 0, 0, 0.05)",
-      }}
-    >
+    <Box ref={props.forwardRef}>
       <ImageThemeUi
         width={props.width || ""}
         height={props.height || ""}

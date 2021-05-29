@@ -9,7 +9,7 @@ import ImageFade, { ImageWithBg } from "../../src/ui/ImageFade";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import { useSpring, animated } from "react-spring";
+import { useSpring, animated, config } from "react-spring";
 
 type DetailProps = {
   product?: Product;
@@ -26,12 +26,6 @@ function getTransformation(bStart: DOMRect, bEnd: DOMRect): string {
   return `translate(${r(deltaX)}px, ${r(deltaY)}px) scale(${scale.toFixed(2)})`;
 }
 
-type Transformation = {
-  transform: string;
-  transition: string;
-  opacity: number;
-};
-
 export default function Detail({ product, relatedProducts }: DetailProps) {
   const router = useRouter();
   const elemRef = useRef<HTMLDivElement>(null);
@@ -39,9 +33,6 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
     opacity: 0,
     transform: "translate(0, 0) scale(1)",
   }));
-
-  const [transformation, setTransformation] =
-    useState<null | Transformation>(null);
 
   if (!product) {
     return (
@@ -104,14 +95,21 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
               gridTemplateColumns: "1fr 0.75fr",
             }}
           >
-            <animated.div style={styles}>
-              <ImageWithBg
-                forwardRef={elemRef}
-                img={productImage[0]}
-                width={"700px"}
-                height={"700px"}
-              />
-            </animated.div>
+            <div
+              style={{
+                backgroundColor: `${productImage[0].responsiveImage.bgColor}33`,
+                boxShadow: "0 100px 80px rgba(0, 0, 0, 0.05)",
+              }}
+            >
+              <animated.div style={styles}>
+                <ImageWithBg
+                  forwardRef={elemRef}
+                  img={productImage[0]}
+                  width={"700px"}
+                  height={"700px"}
+                />
+              </animated.div>
+            </div>
             <Box sx={{ maxWidth: "600px" }}>
               <Box>
                 <Text variant="label" sx={{ textTransform: "uppercase" }}>
