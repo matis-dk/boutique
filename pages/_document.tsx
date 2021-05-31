@@ -12,7 +12,7 @@ class MyDocument extends Document {
         <Head>
           <link
             rel="preload"
-            href="/fonts/Manrope-VariableFont"
+            href="/fonts/Manrope-VariableFont.ttf"
             as="font"
             crossOrigin=""
           />

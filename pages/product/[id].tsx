@@ -2,7 +2,7 @@ import Head from "next/head";
 import { fetchAPI } from "../../src/lib/api";
 import { GetStaticProps, GetStaticPaths } from "next";
 
-import { Box, Flex, Grid, Text, Image } from "@theme-ui/components";
+import { Box, Flex, Grid, Text } from "@theme-ui/components";
 import { PADDING_CONTAINER, WIDTH_CONTAINER_PX } from "../../src/theme/theme";
 import { AllProducts, Product, ProductId } from "../../types/types";
 import ImageFade, { ImageWithBg } from "../../src/ui/ImageFade";
@@ -15,6 +15,8 @@ type DetailProps = {
   product?: Product;
   relatedProducts?: Product[];
 };
+
+const AnimatedBox = animated(Box);
 
 function getTransformation(bStart: DOMRect, bEnd: DOMRect): string {
   const deltaX = bStart.left + bStart.width / 2 - (bEnd.left + bEnd.width / 2);
@@ -32,6 +34,7 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
   const [styles, api] = useSpring(() => ({
     opacity: 0,
     transform: "translate(0, 0) scale(1)",
+    b1: 2,
   }));
 
   if (!product) {
@@ -41,7 +44,6 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
           <title>Product - Boutique</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
-
         <Flex sx={{ justifyContent: "center" }}>As FALLBACK Ya!</Flex>
       </div>
     );
@@ -54,12 +56,17 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
     const bbox = urlParams.get("bbox");
 
     if (!bbox) {
-      api.set({ opacity: 1 });
+      api.set({ opacity: 1, b1: 1 });
       return;
     }
 
     const bStart = JSON.parse(atob(bbox)) as DOMRect;
-    const bEnd = elemRef.current.getBoundingClientRect();
+    const bEnd = elemRef.current?.getBoundingClientRect();
+
+    if (!bEnd) {
+      api.set({ opacity: 1, b1: 1 });
+      return;
+    }
 
     api.set({ opacity: 1 });
     api.set({
@@ -67,6 +74,10 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
     });
     api.start({
       transform: "translate(0, 0) scale(1)",
+    });
+    api.start({
+      b1: 1,
+      config: config.slow,
     });
   }, []);
 
@@ -95,12 +106,18 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
               gridTemplateColumns: "1fr 0.75fr",
             }}
           >
-            <div
-              style={{
-                backgroundColor: `${productImage[0].responsiveImage.bgColor}33`,
-                boxShadow: "0 100px 80px rgba(0, 0, 0, 0.05)",
-              }}
-            >
+            <Box sx={{ position: "relative" }}>
+              <AnimatedBox
+                style={{
+                  height: "100%",
+                  width: "100%",
+                  backgroundColor: `${productImage[0].responsiveImage.bgColor}33`,
+                  boxShadow: "0 100px 80px rgba(0, 0, 0, 0.05)",
+                  position: "absolute",
+                  transform: styles.b1.to((v) => `scaleX(${v})`),
+                  transformOrigin: "100% 50%",
+                }}
+              />
               <animated.div style={styles}>
                 <ImageWithBg
                   forwardRef={elemRef}
@@ -109,7 +126,7 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
                   height={"700px"}
                 />
               </animated.div>
-            </div>
+            </Box>
             <Box sx={{ maxWidth: "600px" }}>
               <Box>
                 <Text variant="label" sx={{ textTransform: "uppercase" }}>
