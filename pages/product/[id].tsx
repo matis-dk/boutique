@@ -52,11 +52,16 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
   const { categories, title, price, description, productImage } = product;
 
   useEffect(() => {
+    api.start({
+      b1: 1,
+      config: config.slow,
+    });
+
     const urlParams = new URLSearchParams(router.asPath.split("?")[1]);
     const bbox = urlParams.get("bbox");
 
     if (!bbox) {
-      api.set({ opacity: 1, b1: 1 });
+      api.set({ opacity: 1 });
       return;
     }
 
@@ -64,7 +69,7 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
     const bEnd = elemRef.current?.getBoundingClientRect();
 
     if (!bEnd) {
-      api.set({ opacity: 1, b1: 1 });
+      api.set({ opacity: 1 });
       return;
     }
 
@@ -74,10 +79,7 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
     });
     api.start({
       transform: "translate(0, 0) scale(1)",
-    });
-    api.start({
-      b1: 1,
-      config: config.slow,
+      config: config.gentle,
     });
   }, []);
 
