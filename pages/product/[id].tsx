@@ -260,6 +260,88 @@ export const getStaticProps: GetStaticProps<{}, ProductId> = async (
       throw new Error("We need to fix this");
     });
 
+  // const chain = Chain({
+  //   url: "https://graphql.datocms.com",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  // } as any);
+
+  // const c = await chain.query({
+  //   allProducts: [
+  //     {
+  //       filter: {
+  //         categories: {
+  //           eq: "asdas",
+  //         },
+  //       },
+  //     },
+  //     {
+  //       id: true,
+  //       price: true,
+  //       title: true,
+  //       categories: true,
+  //       createdAt: true,
+  //       description: [{ markdown: true }, true],
+  //       isLegalDrinkingAgeRequired: true,
+  //       productImage: {
+  //         alt: [{ locale: SiteLocale.en }, true],
+  //         id: true,
+  //         responsiveImage: [
+  //           {},
+  //           {
+  //             src: true,
+  //             webpSrcSet: true,
+  //             sizes: true,
+  //             bgColor: true,
+  //           },
+  //         ],
+  //       },
+  //     },
+  //   ],
+  // });
+
+  // console.log(c);
+
+  // try {
+  //   const g = await Gql.query({
+  //     allProducts: [
+  //       {
+  //         filter: {
+  //           categories: {
+  //             eq: "asdas",
+  //           },
+  //         },
+  //       },
+  //       {
+  //         id: true,
+  //         price: true,
+  //         title: true,
+  //         categories: true,
+  //         createdAt: true,
+  //         description: [{ markdown: true }, true],
+  //         isLegalDrinkingAgeRequired: true,
+  //         productImage: {
+  //           alt: [{ locale: SiteLocale.en }, true],
+  //           id: true,
+  //           responsiveImage: [
+  //             {},
+  //             {
+  //               src: true,
+  //               webpSrcSet: true,
+  //               sizes: true,
+  //               bgColor: true,
+  //             },
+  //           ],
+  //         },
+  //       },
+  //     ],
+  //   });
+  // } catch (err) {
+  //   console.log("---------------");
+  //   console.log(err);
+  // }
+
   return {
     props: product,
     revalidate: 60,
