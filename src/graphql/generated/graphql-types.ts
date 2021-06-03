@@ -1,3 +1,8 @@
+import { GraphQLClient } from 'graphql-request';
+import * as Dom from 'graphql-request/dist/types.dom';
+import { GraphQLError } from 'graphql-request/dist/types';
+import { print } from 'graphql'
+import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
@@ -2867,3 +2872,62 @@ export type FocalPoint = {
   x?: Maybe<Scalars['FloatType']>;
   y?: Maybe<Scalars['FloatType']>;
 };
+
+export type GetProductQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetProductQuery = (
+  { __typename?: 'Query' }
+  & { product?: Maybe<(
+    { __typename?: 'ProductRecord' }
+    & Pick<ProductRecord, 'id' | 'price' | 'title' | 'categories' | 'createdAt' | 'description' | 'isLegalDrinkingAgeRequired'>
+    & { productImage: Array<(
+      { __typename?: 'FileField' }
+      & Pick<FileField, 'alt' | 'id'>
+      & { responsiveImage?: Maybe<(
+        { __typename?: 'ResponsiveImage' }
+        & Pick<ResponsiveImage, 'src' | 'srcSet' | 'sizes' | 'webpSrcSet' | 'bgColor'>
+      )> }
+    )> }
+  )> }
+);
+
+
+export const GetProductDocument = gql`
+    query getProduct {
+  product(filter: {id: {eq: "26340397"}}) {
+    id
+    price
+    title
+    categories
+    createdAt
+    description
+    isLegalDrinkingAgeRequired
+    productImage {
+      alt
+      id
+      responsiveImage {
+        src
+        srcSet
+        sizes
+        webpSrcSet
+        bgColor
+      }
+    }
+  }
+}
+    `;
+
+export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string) => Promise<T>;
+
+
+const defaultWrapper: SdkFunctionWrapper = (action, _operationName) => action();
+const GetProductDocumentString = print(GetProductDocument);
+export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
+  return {
+    getProduct(variables?: GetProductQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data?: GetProductQuery | undefined; extensions?: any; headers: Dom.Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetProductQuery>(GetProductDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getProduct');
+    }
+  };
+}
+export type Sdk = ReturnType<typeof getSdk>;

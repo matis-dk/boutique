@@ -1,0 +1,22 @@
+query getProduct {
+  product(filter: { id: { eq: "26340397" } }) {
+    id
+    price
+    title
+    categories
+    createdAt
+    description
+    isLegalDrinkingAgeRequired
+    productImage {
+      alt
+      id
+      responsiveImage {
+        src
+        srcSet
+        sizes
+        webpSrcSet
+        bgColor
+      }
+    }
+  }
+}
