@@ -35,12 +35,6 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
     transform: "translate(0, 0) scale(1)",
   }));
 
-  const [styless, setStyless] = useState({
-    opacity: 0,
-    transition: "0s",
-    transform: "",
-  });
-
   if (!product) {
     return (
       <div>
@@ -60,12 +54,7 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
     const bbox = urlParams.get("bbox");
 
     if (!bbox) {
-      setStyless({
-        opacity: 1,
-        transition: "0s",
-        transform: "translate(0, 0) scale(1)",
-      });
-      // api.set({ opacity: 1 });
+      api.set({ opacity: 1 });
       return;
     }
 
@@ -73,37 +62,19 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
     const bEnd = elemRef.current?.getBoundingClientRect();
 
     if (!bEnd) {
-      setStyless({
-        opacity: 1,
-        transition: "0s",
-        transform: "translate(0, 0) scale(1)",
-      });
-      // api.set({ opacity: 1 });
+      api.set({ opacity: 1 });
       return;
     }
 
-    setStyless({
+    api.set({
       opacity: 1,
-      transition: "0s",
       transform: getTransformation(bStart, bEnd),
     });
-    // api.set({
-    //   opacity: 1,
-    //   transform: getTransformation(bStart, bEnd),
-    // });
 
-    // api.start({
-    //   transform: "translate(0, 0) scale(1)",
-    //   config: config.gentle,
-    // });
-
-    setTimeout(() => {
-      setStyless({
-        opacity: 1,
-        transition: "transform 0.5s",
-        transform: "translate(0, 0) scale(1)",
-      });
-    }, 0);
+    api.start({
+      transform: "translate(0, 0) scale(1)",
+      config: config.gentle,
+    });
   }, []);
 
   return (
@@ -141,7 +112,7 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
                   position: "absolute",
                 }}
               />
-              <animated.div style={styless} ref={elemRef}>
+              <animated.div style={styles} ref={elemRef}>
                 <ImageWithBg
                   img={productImage[0]}
                   width={"700px"}
