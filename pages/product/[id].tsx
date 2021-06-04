@@ -10,13 +10,12 @@ import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { useSpring, animated, config } from "react-spring";
+import sdk from "../../src/graphql/sdk-client";
 
 type DetailProps = {
   product?: Product;
   relatedProducts?: Product[];
 };
-
-const AnimatedBox = animated(Box);
 
 function getTransformation(bStart: DOMRect, bEnd: DOMRect): string {
   const deltaX = bStart.left + bStart.width / 2 - (bEnd.left + bEnd.width / 2);
@@ -34,7 +33,6 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
   const [styles, api] = useSpring(() => ({
     opacity: 0,
     transform: "translate(0, 0) scale(1)",
-    b1: 2,
   }));
 
   if (!product) {
@@ -52,11 +50,6 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
   const { categories, title, price, description, productImage } = product;
 
   useEffect(() => {
-    api.start({
-      b1: 1,
-      config: config.slow,
-    });
-
     const urlParams = new URLSearchParams(router.asPath.split("?")[1]);
     const bbox = urlParams.get("bbox");
 
@@ -109,15 +102,13 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
             }}
           >
             <Box sx={{ position: "relative" }}>
-              <AnimatedBox
+              <Box
                 style={{
                   height: "100%",
                   width: "100%",
                   backgroundColor: `${productImage[0].responsiveImage.bgColor}33`,
                   boxShadow: "0 100px 80px rgba(0, 0, 0, 0.05)",
                   position: "absolute",
-                  transform: styles.b1.to((v) => `scaleX(${v})`),
-                  transformOrigin: "100% 50%",
                 }}
               />
               <animated.div style={styles}>
@@ -195,13 +186,9 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const products = await fetchAPI<AllProducts>(`{
-    allProducts {
-        id
-    }
-  }`).then((products) => products.data.data.allProducts);
-
-  const productIds = products.map((p) => ({ params: p }));
+  const productIds = await sdk
+    .getAllProductIds()
+    .then(({ data }) => data.allProducts.map((p) => ({ params: p })));
 
   return {
     paths: productIds,
@@ -213,148 +200,18 @@ export const getStaticProps: GetStaticProps<{}, ProductId> = async (
   context
 ) => {
   const productId = context.params.id;
-  const product = await fetchAPI<Product>(`{
-    relatedProducts: allProducts(filter: {categories: {eq: "slik"}}) {
-      id
-      price
-      title
-      categories
-      createdAt
-      description
-      isLegalDrinkingAgeRequired
-      productImage {
-        alt
-        id
-        responsiveImage {
-          src
-          srcSet
-          sizes
-          webpSrcSet
-          bgColor
-        }
-      }
-    }
-    product(filter: {id: {eq: "${productId}"}}) {
-      id
-      price
-      title
-      categories
-      createdAt
-      description
-      isLegalDrinkingAgeRequired
-      productImage {
-        alt
-        id
-        responsiveImage {
-          src
-          srcSet
-          sizes
-          webpSrcSet
-          bgColor
-        }
-      }
-    }
-  }`)
-    .then((product) => product.data.data)
-    .catch((p) => {
-      throw new Error("We need to fix this");
-    });
-
-  // const chain = Chain({
-  //   url: "https://graphql.datocms.com",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // } as any);
-
-  // const c = await chain.query({
-  //   allProducts: [
-  //     {
-  //       filter: {
-  //         categories: {
-  //           eq: "asdas",
-  //         },
-  //       },
-  //     },
-  //     {
-  //       id: true,
-  //       price: true,
-  //       title: true,
-  //       categories: true,
-  //       createdAt: true,
-  //       description: [{ markdown: true }, true],
-  //       isLegalDrinkingAgeRequired: true,
-  //       productImage: {
-  //         alt: [{ locale: SiteLocale.en }, true],
-  //         id: true,
-  //         responsiveImage: [
-  //           {},
-  //           {
-  //             src: true,
-  //             webpSrcSet: true,
-  //             sizes: true,
-  //             bgColor: true,
-  //           },
-  //         ],
-  //       },
-  //     },
-  //   ],
-  // });
-
-  // console.log(c);
-
-  // try {
-  //   const g = await Gql.query({
-  //     allProducts: [
-  //       {
-  //         filter: {
-  //           categories: {
-  //             eq: "asdas",
-  //           },
-  //         },
-  //       },
-  //       {
-  //         id: true,
-  //         price: true,
-  //         title: true,
-  //         categories: true,
-  //         createdAt: true,
-  //         description: [{ markdown: true }, true],
-  //         isLegalDrinkingAgeRequired: true,
-  //         productImage: {
-  //           alt: [{ locale: SiteLocale.en }, true],
-  //           id: true,
-  //           responsiveImage: [
-  //             {},
-  //             {
-  //               src: true,
-  //               webpSrcSet: true,
-  //               sizes: true,
-  //               bgColor: true,
-  //             },
-  //           ],
-  //         },
-  //       },
-  //     ],
-  //   });
-  // } catch (err) {
-  //   console.log("---------------");
-  //   console.log(err);
-  // }
+  const product = await sdk
+    .getProduct({ productId })
+    .then(({ data }) => data.product);
+  const relatedProducts = await sdk
+    .relatedProducts({ categoryId: product.categories })
+    .then(({ data }) => data.relatedProducts);
 
   return {
-    props: product,
+    props: {
+      product,
+      relatedProducts,
+    },
     revalidate: 60,
   };
 };
-
-// { id: '26340397' },
-// { id: '26340333' },
-// { id: '26340335' },
-// { id: '26340332' },
-// { id: '26340339' },
-// { id: '26340341' },
-// { id: '26340353' },
-// { id: '26340351' },
-// { id: '26340350' },
-// { id: '26340324' }

@@ -8,6 +8,7 @@ import { fetchAPI } from "../src/lib/api";
 import { ProductList } from "../types/types";
 import ImageFade from "../src/ui/ImageFade";
 import { MouseEvent, useEffect } from "react";
+import sdk from "../src/graphql/sdk-client";
 
 type ProductsProps = {
   allProducts: ProductList[];
@@ -87,32 +88,10 @@ export default function Products(props: ProductsProps) {
 }
 
 export const getStaticProps: GetStaticProps = async (_) => {
-  const productList = await fetchAPI<{
-    allProducts: ProductList[];
-  }>(`{
-    allProducts {
-      id
-      title
-      price
-      categories
-      productImage {
-        alt
-        id
-        responsiveImage {
-          src
-          srcSet
-          sizes
-          webpSrcSet
-          width
-          height
-          bgColor
-        }
-      }
-    }
-  }`).then((products) => products.data.data);
+  const allProducts = await sdk.getAllProducts().then((res) => res.data);
 
   return {
-    props: productList,
+    props: allProducts,
     revalidate: 60,
   };
 };

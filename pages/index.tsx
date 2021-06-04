@@ -2,13 +2,6 @@ import { Box, Button, Flex, Grid, Text } from "@theme-ui/components";
 import Head from "next/head";
 import Link from "next/link";
 
-import { GetStaticProps } from "next";
-import { Product, ProductId } from "../types/types";
-
-import { fetchAPI } from "../src/lib/api";
-import { request, gql, GraphQLClient } from "graphql-request";
-import { getSdk } from "../src/graphql/generated/graphql-types"; // THIS FILE IS THE GENERATED FILE
-
 export default function Index() {
   return (
     <div>
@@ -67,19 +60,3 @@ export default function Index() {
     </div>
   );
 }
-
-const client = new GraphQLClient("https://graphql.datocms.com", {
-  headers: {
-    Authorization: "Bearer f349cbbbde228e7860be9f38d5d982",
-  },
-});
-
-export const getStaticProps: GetStaticProps<{}, ProductId> = async () => {
-  const sdk = getSdk(client);
-  const payload = await sdk.getProduct();
-  const res = payload.data.product;
-  console.log(res);
-  return {
-    props: {},
-  };
-};

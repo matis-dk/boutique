@@ -2873,60 +2873,139 @@ export type FocalPoint = {
   y?: Maybe<Scalars['FloatType']>;
 };
 
-export type GetProductQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetProductQueryVariables = Exact<{
+  productId?: Maybe<Scalars['ItemId']>;
+}>;
 
 
 export type GetProductQuery = (
   { __typename?: 'Query' }
   & { product?: Maybe<(
     { __typename?: 'ProductRecord' }
-    & Pick<ProductRecord, 'id' | 'price' | 'title' | 'categories' | 'createdAt' | 'description' | 'isLegalDrinkingAgeRequired'>
-    & { productImage: Array<(
-      { __typename?: 'FileField' }
-      & Pick<FileField, 'alt' | 'id'>
-      & { responsiveImage?: Maybe<(
-        { __typename?: 'ResponsiveImage' }
-        & Pick<ResponsiveImage, 'src' | 'srcSet' | 'sizes' | 'webpSrcSet' | 'bgColor'>
-      )> }
+    & ProductFieldsFragment
+  )> }
+);
+
+export type GetAllProductIdsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllProductIdsQuery = (
+  { __typename?: 'Query' }
+  & { allProducts: Array<(
+    { __typename?: 'ProductRecord' }
+    & Pick<ProductRecord, 'id'>
+  )> }
+);
+
+export type GetAllProductsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllProductsQuery = (
+  { __typename?: 'Query' }
+  & { allProducts: Array<(
+    { __typename?: 'ProductRecord' }
+    & ProductFieldsFragment
+  )> }
+);
+
+export type RelatedProductsQueryVariables = Exact<{
+  categoryId?: Maybe<Scalars['String']>;
+}>;
+
+
+export type RelatedProductsQuery = (
+  { __typename?: 'Query' }
+  & { relatedProducts: Array<(
+    { __typename?: 'ProductRecord' }
+    & ProductFieldsFragment
+  )> }
+);
+
+export type ProductFieldsFragment = (
+  { __typename?: 'ProductRecord' }
+  & Pick<ProductRecord, 'id' | 'price' | 'title' | 'categories' | 'createdAt' | 'description' | 'isLegalDrinkingAgeRequired'>
+  & { productImage: Array<(
+    { __typename?: 'FileField' }
+    & Pick<FileField, 'alt' | 'id'>
+    & { responsiveImage?: Maybe<(
+      { __typename?: 'ResponsiveImage' }
+      & Pick<ResponsiveImage, 'src' | 'srcSet' | 'sizes' | 'webpSrcSet' | 'bgColor'>
     )> }
   )> }
 );
 
-
-export const GetProductDocument = gql`
-    query getProduct {
-  product(filter: {id: {eq: "26340397"}}) {
+export const ProductFieldsFragmentDoc = gql`
+    fragment productFields on ProductRecord {
+  id
+  price
+  title
+  categories
+  createdAt
+  description
+  isLegalDrinkingAgeRequired
+  productImage {
+    alt
     id
-    price
-    title
-    categories
-    createdAt
-    description
-    isLegalDrinkingAgeRequired
-    productImage {
-      alt
-      id
-      responsiveImage {
-        src
-        srcSet
-        sizes
-        webpSrcSet
-        bgColor
-      }
+    responsiveImage {
+      src
+      srcSet
+      sizes
+      webpSrcSet
+      bgColor
     }
   }
 }
     `;
+export const GetProductDocument = gql`
+    query getProduct($productId: ItemId) {
+  product(filter: {id: {eq: $productId}}) {
+    ...productFields
+  }
+}
+    ${ProductFieldsFragmentDoc}`;
+export const GetAllProductIdsDocument = gql`
+    query getAllProductIds {
+  allProducts {
+    id
+  }
+}
+    `;
+export const GetAllProductsDocument = gql`
+    query getAllProducts {
+  allProducts {
+    ...productFields
+  }
+}
+    ${ProductFieldsFragmentDoc}`;
+export const RelatedProductsDocument = gql`
+    query relatedProducts($categoryId: String) {
+  relatedProducts: allProducts(filter: {categories: {eq: $categoryId}}) {
+    ...productFields
+  }
+}
+    ${ProductFieldsFragmentDoc}`;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string) => Promise<T>;
 
 
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName) => action();
 const GetProductDocumentString = print(GetProductDocument);
+const GetAllProductIdsDocumentString = print(GetAllProductIdsDocument);
+const GetAllProductsDocumentString = print(GetAllProductsDocument);
+const RelatedProductsDocumentString = print(RelatedProductsDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     getProduct(variables?: GetProductQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data?: GetProductQuery | undefined; extensions?: any; headers: Dom.Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetProductQuery>(GetProductDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getProduct');
+    },
+    getAllProductIds(variables?: GetAllProductIdsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data?: GetAllProductIdsQuery | undefined; extensions?: any; headers: Dom.Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetAllProductIdsQuery>(GetAllProductIdsDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getAllProductIds');
+    },
+    getAllProducts(variables?: GetAllProductsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data?: GetAllProductsQuery | undefined; extensions?: any; headers: Dom.Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetAllProductsQuery>(GetAllProductsDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getAllProducts');
+    },
+    relatedProducts(variables?: RelatedProductsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data?: RelatedProductsQuery | undefined; extensions?: any; headers: Dom.Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<RelatedProductsQuery>(RelatedProductsDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'relatedProducts');
     }
   };
 }

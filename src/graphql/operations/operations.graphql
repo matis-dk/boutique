@@ -1,22 +1,52 @@
-query getProduct {
-  product(filter: { id: { eq: "26340397" } }) {
+# --------------------------------------------------------------------------------
+# QUERIES
+# --------------------------------------------------------------------------------
+
+query getProduct($productId: ItemId) {
+  product(filter: { id: { eq: $productId } }) {
+    ...productFields
+  }
+}
+
+query getAllProductIds {
+  allProducts {
     id
-    price
-    title
-    categories
-    createdAt
-    description
-    isLegalDrinkingAgeRequired
-    productImage {
-      alt
-      id
-      responsiveImage {
-        src
-        srcSet
-        sizes
-        webpSrcSet
-        bgColor
-      }
+  }
+}
+
+query getAllProducts {
+  allProducts {
+    ...productFields
+  }
+}
+
+query relatedProducts($categoryId: String) {
+  relatedProducts: allProducts(filter: { categories: { eq: $categoryId } }) {
+    ...productFields
+  }
+}
+
+# --------------------------------------------------------------------------------
+# FRAGMENTS
+# --------------------------------------------------------------------------------
+
+fragment productFields on ProductRecord {
+  id
+  price
+  title
+  categories
+  createdAt
+  description
+  isLegalDrinkingAgeRequired
+  productImage {
+    alt
+    id
+    responsiveImage {
+      src
+      srcSet
+      sizes
+      webpSrcSet
+      bgColor
     }
   }
 }
