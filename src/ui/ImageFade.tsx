@@ -71,7 +71,6 @@ type ImageWithBgProps = {
   width?: string;
   height?: string;
   sizes?: string;
-  forwardRef?: RefObject<HTMLDivElement>;
   onClick?: (e: MouseEvent<HTMLImageElement>) => void;
 };
 
@@ -79,22 +78,20 @@ export function ImageWithBg(props: ImageWithBgProps) {
   const img = props.img.responsiveImage;
   const imgUrl = img.webpSrcSet;
   return (
-    <Box ref={props.forwardRef}>
-      <ImageThemeUi
-        width={props.width || ""}
-        height={props.height || ""}
-        sizes={props.sizes || ""}
-        srcSet={imgUrl}
-        onClick={props?.onClick}
-        sx={{
-          display: "block",
-          aspectRatio: "1 / 1",
-          width: "100%",
-          backgroundSize: "cover",
-          ...props.sx,
-        }}
-      />
-    </Box>
+    <ImageThemeUi
+      width={props.width || ""}
+      height={props.height || ""}
+      sizes={props.sizes || ""}
+      srcSet={imgUrl}
+      onClick={props?.onClick}
+      sx={{
+        display: "block",
+        aspectRatio: "1 / 1",
+        width: "100%",
+        backgroundSize: "cover",
+        ...props.sx,
+      }}
+    />
   );
 }
 
