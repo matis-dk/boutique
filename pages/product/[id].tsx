@@ -2,7 +2,7 @@ import Head from "next/head";
 import { fetchAPI } from "../../src/lib/api";
 import { GetStaticProps, GetStaticPaths } from "next";
 
-import { Box, Flex, Grid, Text } from "@theme-ui/components";
+import { Box, Button, Flex, Grid, Text } from "@theme-ui/components";
 import { PADDING_CONTAINER, WIDTH_CONTAINER_PX } from "../../src/theme/theme";
 import { AllProducts, Product, ProductId } from "../../types/types";
 import ImageFade, { ImageWithBg } from "../../src/ui/ImageFade";
@@ -135,6 +135,9 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
               <Box mt="4">
                 <Text variant="body">{description}</Text>
               </Box>
+              <Flex mt="60px">
+                <Button>Tilføj til kurv</Button>
+              </Flex>
             </Box>
           </Grid>
           <Box pb="6">
