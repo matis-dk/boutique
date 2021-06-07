@@ -202,13 +202,14 @@ const theme = {
     input: {
       color: colors.gray1,
       backgroundColor: colors.white1 + "99",
-      border: "none",
-      borderRadius: "0px",
+      // border: "none",
+      borderRadius: "4px",
       height: "7",
       px: "4",
       transition: "background-color 0.3s",
       "&:focus": {
         backgroundColor: `${colors.white1}`,
+        borderColor: `${colors.green2}`,
       },
     },
     textarea: {

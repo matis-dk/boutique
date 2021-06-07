@@ -2,7 +2,15 @@ import Head from "next/head";
 import { fetchAPI } from "../../src/lib/api";
 import { GetStaticProps, GetStaticPaths } from "next";
 
-import { Box, Button, Flex, Grid, Text } from "@theme-ui/components";
+import {
+  Box,
+  Button,
+  Flex,
+  Grid,
+  Input,
+  Label,
+  Text,
+} from "@theme-ui/components";
 import { PADDING_CONTAINER, WIDTH_CONTAINER_PX } from "../../src/theme/theme";
 import { AllProducts, Product, ProductId } from "../../types/types";
 import ImageFade, { ImageWithBg } from "../../src/ui/ImageFade";
@@ -11,6 +19,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { useSpring, animated, config } from "react-spring";
 import sdk from "../../src/graphql/sdk-client";
+import axios from "axios";
 
 type DetailProps = {
   product?: Product;
@@ -29,6 +38,7 @@ function getTransformation(bStart: DOMRect, bEnd: DOMRect): string {
 
 export default function Detail({ product, relatedProducts }: DetailProps) {
   const router = useRouter();
+  const [formPrice, setFormPrice] = useState("");
   const elemRef = useRef<HTMLDivElement>(null);
   const [styles, api] = useSpring(() => ({
     opacity: 0,
@@ -76,6 +86,34 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
       config: config.gentle,
     });
   }, []);
+
+  const handlePriceSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+
+    try {
+      await axios.request({
+        url: `/api/post/${product.id}`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        data: JSON.stringify({
+          price: formPrice,
+        }),
+      });
+    } catch (err) {
+      console.error("Opdatering fejlede");
+      console.error(err);
+    }
+
+    console.log("DONE");
+    setFormPrice("");
+  };
+
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormPrice(e.target.value);
+  };
 
   return (
     <div>
@@ -135,7 +173,23 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
               <Box mt="4">
                 <Text variant="body">{description}</Text>
               </Box>
-              <Flex mt="60px">
+
+              <Box mt="4" as="form" onSubmit={handlePriceSubmit}>
+                <Label htmlFor="price-specified">
+                  <Text variant="label">Angiv din pris</Text>
+                </Label>
+                <Input
+                  name="username"
+                  type="number"
+                  id="price-specified"
+                  mb={3}
+                  placeholder="F.eks. 400kr"
+                  value={formPrice}
+                  onChange={handlePriceChange}
+                />
+              </Box>
+
+              <Flex mt="40px">
                 <Button>Tilføj til kurv</Button>
               </Flex>
             </Box>
