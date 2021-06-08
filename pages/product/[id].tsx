@@ -89,7 +89,6 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
 
   const handlePriceSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-
     try {
       await axios.request({
         url: `/api/post/${product.id}`,
@@ -102,13 +101,11 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
           price: formPrice,
         }),
       });
-      throw new Error("This api error");
     } catch (err) {
       console.error("Opdatering fejlede");
       console.error(err);
     }
 
-    console.log("DONE");
     setFormPrice("");
   };
 

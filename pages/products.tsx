@@ -31,14 +31,6 @@ export default function Products(props: ProductsProps) {
         <Text mb="6" variant="headline2">
           Produkter
         </Text>
-        <button
-          type="button"
-          onClick={() => {
-            throw new Error("Sentry Frontend Error");
-          }}
-        >
-          Throw error
-        </button>
         <Grid
           gap="6"
           sx={{
