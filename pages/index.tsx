@@ -2,7 +2,7 @@ import { Box, Button, Flex, Grid, Text } from "@theme-ui/components";
 import Head from "next/head";
 import Link from "next/link";
 
-console.log("test");
+console.log("test2");
 
 export default function Index() {
   return (
