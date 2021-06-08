@@ -89,6 +89,8 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
 
   const handlePriceSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
+    throw new Error("This api error");
+
     try {
       await axios.request({
         url: `/api/post/${product.id}`,
