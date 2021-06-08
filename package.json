@@ -10,6 +10,7 @@
     "schema": "npx get-graphql-schema --header 'Authorization=Bearer f349cbbbde228e7860be9f38d5d982' https://graphql.datocms.com > src/graphql/scheme.graphql"
   },
   "dependencies": {
+    "@sentry/nextjs": "^6.5.1",
     "@types/react": "^17.0.3",
     "axios": "^0.21.1",
     "datocms-client": "^3.4.10",

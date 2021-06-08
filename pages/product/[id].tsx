@@ -102,6 +102,7 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
           price: formPrice,
         }),
       });
+      throw new Error("This api error");
     } catch (err) {
       console.error("Opdatering fejlede");
       console.error(err);
