@@ -9,6 +9,7 @@ import { ProductList } from "../types/types";
 import ImageFade from "../src/ui/ImageFade";
 import { MouseEvent, useEffect } from "react";
 import sdk from "../src/graphql/sdk-client";
+import * as Sentry from "@sentry/nextjs";
 
 type ProductsProps = {
   allProducts: ProductList[];
@@ -31,6 +32,15 @@ export default function Products(props: ProductsProps) {
         <Text mb="6" variant="headline2">
           Produkter
         </Text>
+        <button
+          onClick={() => {
+            Sentry.captureException({
+              errMessage: "Something went wrong",
+            });
+          }}
+        >
+          Bomb
+        </button>
         <Grid
           gap="6"
           sx={{
