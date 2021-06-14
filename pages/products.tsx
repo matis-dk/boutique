@@ -7,7 +7,7 @@ import Container from "../src/layout/Container";
 import { fetchAPI } from "../src/lib/api";
 import { ProductList } from "../types/types";
 import ImageFade from "../src/ui/ImageFade";
-import { MouseEvent, useEffect } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import sdk from "../src/graphql/sdk-client";
 import * as Sentry from "@sentry/nextjs";
 
@@ -17,10 +17,26 @@ type ProductsProps = {
 
 export default function Products(props: ProductsProps) {
   const router = useRouter();
-
+  const [showBomb, setBomb] = useState(false);
   useEffect(() => {
     props.allProducts.forEach((p) => router.prefetch(`/product/${p.id}`));
   }, []);
+
+  function throwReferenceError() {
+    // @ts-ignore
+    if (router.random.field) {
+    }
+  }
+
+  function throwSantaxError() {
+    // @ts-ignore
+    eval("hoo bar");
+  }
+
+  function throwTypeError() {
+    // @ts-ignore
+    null.f();
+  }
 
   return (
     <div>
@@ -32,15 +48,20 @@ export default function Products(props: ProductsProps) {
         <Text mb="6" variant="headline2">
           Produkter
         </Text>
-        <button
-          onClick={() => {
-            Sentry.captureException({
-              errMessage: "Something went wrong",
-            });
-          }}
-        >
-          Bomb
-        </button>
+        <Box>
+          <button onClick={throwReferenceError}>Throw reference error</button>
+          <button onClick={throwSantaxError}>Throw syntax error</button>
+          <button onClick={throwTypeError}>Throw type error</button>
+          <button
+            onClick={() => {
+              setBomb(true);
+            }}
+          >
+            Mount bomb
+          </button>
+
+          {showBomb && <ErrorBomb />}
+        </Box>
         <Grid
           gap="6"
           sx={{
@@ -94,6 +115,16 @@ export default function Products(props: ProductsProps) {
         </Grid>
       </Container>
     </div>
+  );
+}
+
+function ErrorBomb(e: any) {
+  return (
+    <Box>
+      <Box>
+        <h1>Header {e.doesnt.exist ? 1 : 0}</h1>
+      </Box>
+    </Box>
   );
 }
 
