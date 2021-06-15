@@ -6,6 +6,8 @@ import Header from "../src/layout/Header";
 import Footer from "../src/layout/Footer";
 
 function MyApp({ Component, pageProps }: AppProps) {
+  console.log(Component);
+
   return (
     <ThemeProvider theme={theme}>
       <Box>
