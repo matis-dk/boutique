@@ -43,7 +43,6 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
   const [styles, api] = useSpring(() => ({
     // opacity: 0,
     // transform: "translate(0, 0) scale(1)",
-    position: "relative",
   }));
 
   if (!product) {
@@ -148,13 +147,16 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
                   position: "absolute",
                 }}
               />
-              <animated.div style={styles} ref={elemRef}>
-                <ImageWithBg
-                  img={productImage[0]}
-                  width={"700px"}
-                  height={"700px"}
-                />
-              </animated.div>
+              {/* <animated.div style={styles} ref={elemRef}> */}
+              <ImageWithBg
+                img={productImage[0]}
+                width={"700px"}
+                height={"700px"}
+                sx={{
+                  position: "relative",
+                }}
+              />
+              {/* </animated.div> */}
             </Box>
             <Box sx={{ maxWidth: "600px" }}>
               <Box>
