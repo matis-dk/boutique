@@ -41,8 +41,9 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
   const [formPrice, setFormPrice] = useState("");
   const elemRef = useRef<HTMLDivElement>(null);
   const [styles, api] = useSpring(() => ({
-    opacity: 0,
-    transform: "translate(0, 0) scale(1)",
+    // opacity: 0,
+    // transform: "translate(0, 0) scale(1)",
+    position: "relative",
   }));
 
   if (!product) {
@@ -59,38 +60,35 @@ export default function Detail({ product, relatedProducts }: DetailProps) {
 
   const { categories, title, price, description, productImage } = product;
 
-  useEffect(() => {
-    const urlParams = new URLSearchParams(router.asPath.split("?")[1]);
-    const bbox = urlParams.get("bbox");
+  // useEffect(() => {
+  //   const urlParams = new URLSearchParams(router.asPath.split("?")[1]);
+  //   const bbox = urlParams.get("bbox");
 
-    if (!bbox) {
-      api.set({ opacity: 1 });
-      return;
-    }
+  //   if (!bbox) {
+  //     api.set({ opacity: 1 });
+  //     return;
+  //   }
 
-    const bStart = JSON.parse(atob(bbox)) as DOMRect;
-    const bEnd = elemRef.current?.getBoundingClientRect();
+  //   const bStart = JSON.parse(atob(bbox)) as DOMRect;
+  //   const bEnd = elemRef.current?.getBoundingClientRect();
 
-    if (!bEnd) {
-      api.set({ opacity: 1 });
-      return;
-    }
+  //   if (!bEnd) {
+  //     api.set({ opacity: 1 });
+  //     return;
+  //   }
 
-    api.set({
-      opacity: 1,
-      transform: getTransformation(bStart, bEnd),
-    });
+  //   api.set({
+  //     opacity: 1,
+  //     transform: getTransformation(bStart, bEnd),
+  //   });
 
-    api.start({
-      transform: "translate(0, 0) scale(1)",
-      config: config.gentle,
-    });
-  }, []);
+  //   api.start({
+  //     transform: "translate(0, 0) scale(1)",
+  //     config: config.gentle,
+  //   });
+  // }, []);
 
   const handlePriceSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    throw new Error("This api error");
-
     try {
       await axios.request({
         url: `/api/post/${product.id}`,
